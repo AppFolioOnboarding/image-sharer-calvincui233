@@ -1,0 +1,5 @@
+<%= simple_form_for @image do |f| %>
+  <%= render 'shared/error_messages' %>
+  <%= f.input :url, label: 'Image URL', error: 'This URL is not valid' %>
+  <%= f.button :submit %>
+<% end %>
