@@ -4,5 +4,4 @@ Rails.application.routes.draw do
 
   root 'images#new'
   resources :images
-  # get 'form' => 'application#form'
 end
