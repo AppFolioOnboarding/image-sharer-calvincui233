@@ -9,16 +9,20 @@ class ImagesController < ActionController::Base
   end
 
   def show
-    @image = Image.find(params[:id])
+    unless @image = Image.find_by(id: params[:id])
+      flash[:error] = "Image does not exist"
+      redirect_to root_path
+    end
   end
 
   def create
     @image = Image.new(image_url)
 
     if @image.save
+      flash[:notice] = "Image successfully created"
       redirect_to action: 'show', id: @image.id
     else
-      render 'new'
+      render 'new', :status => :unprocessable_entity
     end
   end
 
