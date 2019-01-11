@@ -11,7 +11,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should create image' do
-    assert_difference'Image.count' do
+    assert_difference 'Image.count' do
       post images_url, params: { image: { url: 'https://bit.ly/2siExH7' } }
     end
     assert_redirected_to image_url(Image.last)
@@ -34,6 +34,6 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   test 'should direct to home' do
     get image_url(-1)
     assert_redirected_to root_path
-    assert_equal flash[:error], "Image does not exist"
+    assert_equal flash[:error], 'Image does not exist'
   end
 end
