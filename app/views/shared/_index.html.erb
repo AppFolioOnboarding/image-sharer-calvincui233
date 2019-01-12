@@ -2,7 +2,7 @@
 <table>
   <% @images.each do |image| %>
     <tr>
-      <td><%= image_tag(image.url, width: '280' ) %></td>
+      <td class="js-image"><%= image_tag(image.url, width: '280' ) %></td>
       <td><%= link_to 'show', image_path(image) %></td>
     </tr>
   <% end %>
