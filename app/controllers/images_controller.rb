@@ -4,8 +4,13 @@ require 'net/http'
 class ImagesController < ActionController::Base
   protect_from_forgery with: :exception
 
+  def index
+    @images = Image.order('updated_at DESC')
+  end
+
   def new
     @image = Image.new
+    @images = Image.order('updated_at DESC')
   end
 
   def show

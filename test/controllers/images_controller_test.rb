@@ -1,8 +1,13 @@
 require 'test_helper'
 class ImagesControllerTest < ActionDispatch::IntegrationTest
   test 'should get index' do
+    get images_path
+    assert_response :ok
+  end
+
+  test 'should get home' do
     get root_path
-    assert_response :success
+    assert_response :ok
   end
 
   test 'should get new' do
@@ -35,5 +40,20 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     get image_url(-1)
     assert_redirected_to root_path
     assert_equal flash[:error], 'Image does not exist'
+  end
+
+  test 'should show images in order' do
+    images = [
+      Image.create(url: 'https://bit.ly/2siExH7', created_at: Time.current),
+      Image.create(url: 'https://bit.ly/2CfKXeF', created_at: Time.current - 1.day),
+      Image.create(url: 'https://bit.ly/2siExH7', created_at: Time.current - 2.days)
+    ]
+
+    get images_path
+    assert_select '.js-image' do |imgs|
+      imgs.each_with_index do |img, index|
+        assert_select img, "img[src=\"#{images[index].url}\"]", count: 1
+      end
+    end
   end
 end
