@@ -10,7 +10,6 @@ class ImagesController < ActionController::Base
 
   def new
     @image = Image.new
-    @images = Image.order('updated_at DESC')
   end
 
   def show

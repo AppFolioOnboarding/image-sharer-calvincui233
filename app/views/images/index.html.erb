@@ -1,11 +1,3 @@
 <%= button_to "Home", root_path, method: :get %>
 <h1>Listing images</h1>
-
-<table>
-  <% @images.each do |image| %>
-    <tr>
-      <td class="js-image"><%= image_tag(image.url, width: '280' ) %></td>
-      <td><%= link_to 'show', image_path(image) %></td>
-    </tr>
-  <% end %>
-</table>
+<%= render 'shared/index' %>
