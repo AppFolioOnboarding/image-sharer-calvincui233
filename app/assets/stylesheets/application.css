@@ -13,3 +13,34 @@
  *= require_tree .
  *= require_self
  */
+
+.image-card {
+  align-self: center;
+  margin: 10px auto;
+  margin-left: 10px;
+  margin-right: 10px;
+  background-color: #e9ecef;
+  box-shadow: inset 0 0 5px rgba(34, 126, 236, .8);
+  border-radius: 12px;
+  padding: 1% 5%;
+  font-size: 120%;
+}
+
+.image-card__button {
+  float: none;
+  margin: 10px auto;
+  justify-content: center;
+  text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 5rem azure;
+}
+
+.footer {
+  position: marker;
+  bottom: 0;
+  width: 100%;
+  border-radius: 5px;
+  background-color: rgba(34, 126, 236, .8);
+  color: white;
+  text-align: center;
+}
+

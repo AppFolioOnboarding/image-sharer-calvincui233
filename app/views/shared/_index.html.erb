@@ -1,9 +1,12 @@
-
-<table>
+<div class="row container-fluid">
   <% @images.each do |image| %>
-    <tr>
-      <td class="js-image"><%= image_tag(image.url, width: '280' ) %></td>
-      <td><%= link_to 'show', image_path(image) %></td>
-    </tr>
+    <div class="js-image col image-card" >
+      <div class="offset-md-1">
+        <%= image_tag(image.url, width: '280') %>
+      </div>
+      <div class="btn btn-outline-primary image-card__button offset-md-3">
+        <%= link_to 'View Details', image_path(image), :class => "btn" %>
+      </div>
+    </div>
   <% end %>
-</table>
+</div>
