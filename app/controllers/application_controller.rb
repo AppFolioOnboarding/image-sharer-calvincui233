@@ -1,7 +1,5 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
-  def home
-    @images = Image.order('updated_at DESC')
-  end
+  def home; end
 end

@@ -15,8 +15,8 @@ class ApplicationControllerTest < ActionDispatch::IntegrationTest
 
   test 'should have one link to index' do
     get root_path
-    assert_select '#all-images-tab' do
-      assert_select 'a[href="/images"]', count: 1
+    assert_select '#home-tab' do
+      assert_select 'a[href="/"]', count: 1
     end
   end
 end

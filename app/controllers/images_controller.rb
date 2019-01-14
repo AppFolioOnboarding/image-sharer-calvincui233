@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'net/http'
 
-class ImagesController < ActionController::Base
+class ImagesController < ApplicationController
   protect_from_forgery with: :exception
 
   def index
