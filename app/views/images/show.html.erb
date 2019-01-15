@@ -1,6 +1,10 @@
-<p>
-  <%= image_tag(@image.url) %>
-</p>
+<p><%= image_tag(@image.url) %></p>
+<% @image.tag_list.each do |tag| %>
+  <div class="btn btn-success">
+    <p class="card-text"><%= tag %></p>
+  </div>
+<% end %>
+<span></span>
 <% if flash[:notice] %>
   <div class="notice"><%= flash[:notice] %></div>
 <% end %>
