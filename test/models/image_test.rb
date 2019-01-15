@@ -18,10 +18,17 @@ class ImageTest < ActiveSupport::TestCase
     assert_includes image.errors.messages[:url], "can't be blank"
   end
 
-  test 'should save tags' do
+  test 'should save non-empty tags' do
     image = Image.new(url: 'http://google.com', tag_list: 'search, engine, blank')
     assert_predicate image, :valid?
     assert_equal %w[search engine blank], image.tag_list
+    assert image.errors.count.zero?
+  end
+
+  test 'should save empty tags' do
+    image = Image.new(url: 'http://google.com', tag_list: '')
+    assert_predicate image, :valid?
+    assert_equal [], image.tag_list
     assert image.errors.count.zero?
   end
 end

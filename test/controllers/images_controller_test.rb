@@ -56,4 +56,38 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
       end
     end
   end
+
+  test 'should show correct tags if image is created with tags' do
+    @tags = ['Santa Barbara', 'landscape']
+    image = Image.create!(url: 'https://bit.ly/2siExH7', tag_list: @tags)
+
+    get root_path
+    assert_response :ok
+    assert_select '.card-text' do |tags|
+      tags.each_with_index do |tag, index|
+        assert_equal @tags[index], tag.text
+      end
+    end
+
+    get image_path(image)
+    assert_response :ok
+    assert_select '.card-text' do |tags|
+      tags.each_with_index do |tag, index|
+        assert_equal @tags[index], tag.text
+      end
+    end
+  end
+
+  test 'should not show image tag if image is created without tags' do
+    @tags = []
+    image = Image.create!(url: 'https://bit.ly/2siExH7', tag_list: @tags)
+
+    get root_path
+    assert_response :ok
+    assert_select '.card-text', count: 0
+
+    get image_path(image)
+    assert_response :ok
+    assert_select '.card-text', count: 0
+  end
 end
