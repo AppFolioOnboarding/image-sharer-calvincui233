@@ -98,4 +98,26 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_response :ok
     assert_select '.card-text', count: 0
   end
+
+  test 'test nonexistent tag' do
+    get images_path, params: { tag: 'beach' }
+    assert_response :ok
+    assert_select 'h1', 'No Images Found'
+  end
+
+  test 'test empty tag' do
+    get images_path, params: { tag: '' }
+    assert_response :ok
+    assert_select 'h1', 'No Images Found'
+  end
+
+  test 'test existent tag' do
+    Image.create!(url: 'https://bit.ly/2CfKXeF')
+    Image.create!(url: 'https://bit.ly/2siExH7', tag_list: ['Santa Barbara', 'landscape', 'beach'])
+
+    get images_path, params: { tag: 'beach' }
+    assert_response :ok
+    assert_select '.image-card', count: 1
+    assert_select "img[src=\'https://bit.ly/2siExH7\']", count: 1
+  end
 end

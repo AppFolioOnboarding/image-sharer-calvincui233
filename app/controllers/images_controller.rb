@@ -5,7 +5,11 @@ class ImagesController < ApplicationController
   protect_from_forgery with: :exception
 
   def index
-    @images = Image.order('updated_at DESC')
+    @images = if params[:tag].blank?
+                Image.order('created_at DESC')
+              else
+                Image.order('created_at DESC').tagged_with(params[:tag])
+              end
   end
 
   def new
