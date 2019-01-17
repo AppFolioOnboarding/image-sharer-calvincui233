@@ -7,6 +7,7 @@ module PageObjects
 
       def tags
         # TODO
+        node.all('.card-text').map(&:text)
       end
 
       def click_tag!(tag_name)

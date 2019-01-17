@@ -1,5 +1,7 @@
-<%= simple_form_for @image do |f| %>
+<div class="form-group">
+<%= simple_form_for @image  do |f| %>
   <%= f.input :url, label: 'Image URL' %>
   <%= f.input :tag_list, label: 'Add tags', placeholder: 'Optional', input_html: { value: @image.tag_list.join(', ') }%>
   <%= f.button :submit %>
 <% end %>
+</div>
