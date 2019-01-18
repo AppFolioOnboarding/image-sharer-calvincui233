@@ -5,7 +5,8 @@ module PageObjects
 
       collection :images, locator: '.image-list', item_locator: '.image-card', contains: ImageCard do
         def view!
-          # TODO
+          node.click_on('View Details')
+          window.change_to(ShowPage)
         end
       end
 

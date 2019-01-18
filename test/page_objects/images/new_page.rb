@@ -11,7 +11,7 @@ module PageObjects
 
       def create_image!(url: nil, tags: nil)
         self.url.set(url) if url.present?
-        self.tag_list.set(tags) if tags.present?
+        tag_list.set(tags) if tags.present?
         node.click_button('Create Image')
         window.change_to(ShowPage, self.class)
       end

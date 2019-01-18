@@ -118,6 +118,26 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     get images_path, params: { tag: 'beach' }
     assert_response :ok
     assert_select '.image-card', count: 1
-    assert_select "img[src=\'https://bit.ly/2siExH7\']", count: 1
+    assert_select "img[src='https://bit.ly/2siExH7']", count: 1
+  end
+
+  test 'should successfully delete an image' do
+    image1 = Image.create!(url: 'https://bit.ly/2CfKXeF')
+    Image.create!(url: 'https://bit.ly/2siExH7')
+    assert_difference('Image.count', -1) do
+      delete image_path(image1)
+    end
+    assert_redirected_to images_path
+    assert_equal flash[:notice], 'Image Deleted!'
+    assert_select "img[src='https://bit.ly/2CfKXeF']", count: 0
+  end
+
+  test 'should not successfully delete an image' do
+    Image.create!(url: 'https://bit.ly/2CfKXeF')
+    assert_difference 'Image.count', 0 do
+      delete image_path '-1'
+    end
+    assert_redirected_to images_path
+    assert_equal flash[:error], 'Delete Failed!'
   end
 end

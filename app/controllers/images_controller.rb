@@ -34,6 +34,19 @@ class ImagesController < ApplicationController
     end
   end
 
+  def destroy
+    # Assuming the user won't abuse delete
+    # otherwise exceptions should be thrown
+    @image = Image.find_by(id: params[:id])
+    if @image.nil?
+      flash[:error] = 'Delete Failed!'
+    else
+      @image.destroy
+      flash[:notice] = 'Image Deleted!'
+    end
+    redirect_to images_path
+  end
+
   private
 
   def image_url

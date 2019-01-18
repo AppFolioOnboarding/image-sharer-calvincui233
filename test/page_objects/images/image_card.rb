@@ -6,7 +6,6 @@ module PageObjects
       end
 
       def tags
-        # TODO
         node.all('.card-text').map(&:text)
       end
 

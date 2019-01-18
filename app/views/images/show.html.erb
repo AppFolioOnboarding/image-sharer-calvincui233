@@ -5,6 +5,7 @@
   </div>
 <% end %>
 <span></span>
-<% if flash[:notice] %>
-  <div class="notice"><%= flash[:notice] %></div>
-<% end %>
+<br/>
+<div class="btn btn-danger image-card__button">
+<%= link_to 'Delete', image_path(@image.id), :class => 'image-card__delete', :method => :delete,  :data => {confirm: 'Are you sure?'} %>
+</div>

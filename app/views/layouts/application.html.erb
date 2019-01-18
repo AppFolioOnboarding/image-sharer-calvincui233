@@ -16,6 +16,12 @@
   </head>
   <body>
     <%= render 'shared/nav_bar' %>
+    <% flash.each do |key, value| %>
+      <div class="alert bg-success">
+        <a class="notice"><%= value %></a>
+        <button class="close" data-dismiss="alert">&times;</button>
+      </div>
+    <% end %>
     <%= yield %>
 
     <!-- Optional JavaScript -->
