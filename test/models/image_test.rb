@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ImageTest < ActiveSupport::TestCase
   test 'should validate url' do
-    image = Image.new(url: 'http://google.com')
+    image = Image.new(url: 'http://google.com', tag_list: 'test')
     assert_predicate(image, :valid?)
   end
 
@@ -25,10 +25,9 @@ class ImageTest < ActiveSupport::TestCase
     assert image.errors.count.zero?
   end
 
-  test 'should save empty tags' do
-    image = Image.new(url: 'http://google.com', tag_list: '')
-    assert_predicate image, :valid?
-    assert_equal [], image.tag_list
-    assert image.errors.count.zero?
+  test 'should not save empty tags' do
+    image = Image.new(url: 'http://google.com')
+    assert_not_predicate image, :valid?
+    assert_includes image.errors.messages[:tag_list], "can't be blank"
   end
 end
