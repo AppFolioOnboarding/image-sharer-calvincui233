@@ -1,0 +1,6 @@
+<%= simple_form_for @image, method: :patch do |f| %>
+  <%= f.input :url, label: 'Image URL', readonly: true %>
+  <%= f.input :tag_list, label: 'Edit tags (comma separated.)', input_html: { value: @image.tag_list.join(', ') }%>
+  <%= f.button :submit %>
+<% end %>
+<%= image_tag @image.url%>

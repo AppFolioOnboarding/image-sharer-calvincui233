@@ -148,4 +148,53 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to images_path
     assert_equal flash[:error], 'Delete Failed!'
   end
+
+  test 'should not be able to submit blank tags' do
+    tag_list = %w[landscape beach]
+    @image = Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: tag_list)
+    assert_no_difference 'Image.count' do
+      patch image_path(@image), params: { image: { tag_list: '' } }
+    end
+    @image[:tag_list].each do |tag|
+      assert_includes tag_list, tag
+    end
+    tag_list.each do |tag|
+      assert_includes @image[:tag_list], tag
+    end
+    assert_response :unprocessable_entity
+    assert_select '.error', text: "can't be blank"
+  end
+
+  test 'should create only one tag if string does not contain comma' do
+    tag_list = %w[landscape beach]
+    @image = Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: tag_list)
+    get edit_image_path(@image)
+    assert_response :ok
+    new_tag_list = '1@2#3$4%5^6&7*8(9)0!~'
+    assert_no_difference 'Image.count' do
+      patch image_path(@image), params: { image: { tag_list: new_tag_list } }
+    end
+    get image_path(@image.id)
+    assert_select '#image-card', count: 1
+    assert_select '.card-text' do |tag|
+      assert_equal new_tag_list, tag.text
+    end
+  end
+
+  test 'should correctly create tags separated by comma' do
+    tag_list = %w[landscape beach]
+    @image = Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: tag_list)
+    new_tag_list = %w[sunshine desert]
+    assert_no_difference 'Image.count' do
+      patch image_path(@image), params: { image: { tag_list: new_tag_list } }
+    end
+    assert_redirected_to image_url(@image)
+    get image_path(@image.id)
+    assert_select '.card-text', count: 2
+    assert_select '.card-text' do |tags|
+      tags.each do |tag|
+        assert_includes tag_list, tag.text
+      end
+    end
+  end
 end
