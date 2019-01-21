@@ -170,7 +170,23 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     @image = Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: tag_list)
     get edit_image_path(@image)
     assert_response :ok
-    new_tag_list = '1@2#3$4%5^6&7*8(9)0!~'
+    new_tag_list = 'Santa Barbara'
+    assert_no_difference 'Image.count' do
+      patch image_path(@image), params: { image: { tag_list: new_tag_list } }
+    end
+    get image_path(@image.id)
+    assert_select '#image-card', count: 1
+    assert_select '.card-text' do |tag|
+      assert_equal new_tag_list, tag.text
+    end
+  end
+
+  test 'should create only one tag if string contains two words separated by space' do
+    tag_list = %w[landscape beach]
+    @image = Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: tag_list)
+    get edit_image_path(@image)
+    assert_response :ok
+    new_tag_list = 'landscape beach'
     assert_no_difference 'Image.count' do
       patch image_path(@image), params: { image: { tag_list: new_tag_list } }
     end
@@ -184,7 +200,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   test 'should correctly create tags separated by comma' do
     tag_list = %w[landscape beach]
     @image = Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: tag_list)
-    new_tag_list = %w[sunshine desert]
+    new_tag_list = 'sunshine, desert'
     assert_no_difference 'Image.count' do
       patch image_path(@image), params: { image: { tag_list: new_tag_list } }
     end
@@ -193,7 +209,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.card-text', count: 2
     assert_select '.card-text' do |tags|
       tags.each do |tag|
-        assert_includes tag_list, tag.text
+        assert_includes new_tag_list, tag.text
       end
     end
   end
