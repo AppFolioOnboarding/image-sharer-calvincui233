@@ -17,12 +17,12 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should create image' do
     assert_difference 'Image.count' do
-      post images_url, params: { image: { url: 'https://bit.ly/2siExH7' } }
+      post images_url, params: { image: { url: 'https://bit.ly/2siExH7', tag_list: 'landscape' } }
     end
     assert_redirected_to image_url(Image.last)
   end
 
-  test 'should not create image' do
+  test 'should not create image if url is invalid' do
     assert_no_difference 'Image.count' do
       post images_url, params: { image: { url: '123' } }
     end
@@ -30,8 +30,16 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select '.error', text: 'is not a valid URL'
   end
 
+  test 'should not create image if tag list is empty' do
+    assert_no_difference 'Image.count' do
+      post images_url, params: { image: { url: 'https://bit.ly/2siExH7', tag_list: [] } }
+    end
+    assert_response :unprocessable_entity
+    assert_select '.error', text: "can't be blank"
+  end
+
   test 'should show image' do
-    image = Image.create!(url: 'https://bit.ly/2siExH7')
+    image = Image.create!(url: 'https://bit.ly/2siExH7', tag_list: %w[landscape beach])
     get image_url(image)
     assert_response :ok
   end
@@ -44,9 +52,9 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
 
   test 'should show images in order' do
     images = [
-      Image.create(url: 'https://bit.ly/2siExH7', created_at: Time.current),
-      Image.create(url: 'https://bit.ly/2CfKXeF', created_at: Time.current - 1.day),
-      Image.create(url: 'https://bit.ly/2siExH7', created_at: Time.current - 2.days)
+      Image.create(url: 'https://bit.ly/2siExH7', tag_list: %w[landscape beach], created_at: Time.current),
+      Image.create(url: 'https://bit.ly/2CfKXeF', tag_list: %w[landscape beach], created_at: Time.current - 1.day),
+      Image.create(url: 'https://bit.ly/2siExH7', tag_list: %w[landscape beach], created_at: Time.current - 2.days)
     ]
 
     get images_path
@@ -83,16 +91,16 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'should not show image tag if image is created without tags on index page' do
-    Image.create!(url: 'https://bit.ly/2siExH7', tag_list: [])
+  test 'should not show image tag if image is created with the tag untagged on index page' do
+    Image.create!(url: 'https://bit.ly/2siExH7', tag_list: ['untagged'])
 
     get root_path
     assert_response :ok
     assert_select '.card-text', count: 0
   end
 
-  test 'should not show image tag if image is created without tags on show page' do
-    image = Image.create!(url: 'https://bit.ly/2siExH7', tag_list: [])
+  test 'should not show image tag if image is created with with the tag untagged on show page' do
+    image = Image.create!(url: 'https://bit.ly/2siExH7', tag_list: ['untagged'])
 
     get image_path(image)
     assert_response :ok
@@ -112,7 +120,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'test existent tag' do
-    Image.create!(url: 'https://bit.ly/2CfKXeF')
+    Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: ['Another'])
     Image.create!(url: 'https://bit.ly/2siExH7', tag_list: ['Santa Barbara', 'landscape', 'beach'])
 
     get images_path, params: { tag: 'beach' }
@@ -122,8 +130,8 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should successfully delete an image' do
-    image1 = Image.create!(url: 'https://bit.ly/2CfKXeF')
-    Image.create!(url: 'https://bit.ly/2siExH7')
+    image1 = Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: %w[landscape beach])
+    Image.create!(url: 'https://bit.ly/2siExH7', tag_list: %w[landscape beach])
     assert_difference('Image.count', -1) do
       delete image_path(image1)
     end
@@ -133,7 +141,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should not successfully delete an image' do
-    Image.create!(url: 'https://bit.ly/2CfKXeF')
+    Image.create!(url: 'https://bit.ly/2CfKXeF', tag_list: %w[landscape beach])
     assert_difference 'Image.count', 0 do
       delete image_path '-1'
     end
