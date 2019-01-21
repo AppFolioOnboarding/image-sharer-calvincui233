@@ -34,6 +34,22 @@ class ImagesController < ApplicationController
     end
   end
 
+  def edit
+    @image = Image.find(params[:id])
+    return @image unless @image.nil?
+    flash[:error] = 'Image does not exist'
+    redirect_to root_path
+  end
+
+  def update
+    @image = Image.find(params[:id])
+    if @image.update(image_url)
+      redirect_to action: 'show', id: @image.id
+    else
+      render 'edit', status: :unprocessable_entity
+    end
+  end
+
   def destroy
     # Assuming the user won't abuse delete
     # otherwise exceptions should be thrown

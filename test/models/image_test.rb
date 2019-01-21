@@ -30,4 +30,23 @@ class ImageTest < ActiveSupport::TestCase
     assert_not_predicate image, :valid?
     assert_includes image.errors.messages[:tag_list], "can't be blank"
   end
+
+  test 'should not create image with any tag longer than 20' do
+    image = Image.new(url: 'http://google.com', tag_list: 'this string is longer than 20')
+    assert_not_predicate image, :valid?
+
+    image = Image.new(url: 'http://google.com', tag_list: 'beach, this string is longer than 20')
+    assert_not_predicate image, :valid?
+  end
+
+  test 'should create image with every tag in length [1,20] inclusively' do
+    image = Image.new(url: 'http://google.com', tag_list: 'Santa Barbara')
+    assert_predicate image, :valid?
+
+    image = Image.new(url: 'http://google.com', tag_list: 't,b,d')
+    assert_predicate image, :valid?
+
+    image = Image.new(url: 'http://google.com', tag_list: 'tag1,tag2,tag3')
+    assert_predicate image, :valid?
+  end
 end

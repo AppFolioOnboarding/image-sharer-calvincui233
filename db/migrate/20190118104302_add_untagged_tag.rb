@@ -13,7 +13,7 @@ class AddUntaggedTag < ActiveRecord::Migration[5.2]
       WHERE images.id != taggings.taggable_id
     SQL
     execute <<-SQL
-      UPDATE taggings SET (tag_id, taggable_type) = ((SELECT id FROM tags WHERE name='untagged'), 'Image')
+      UPDATE taggings SET (tag_id, taggable_type, context) = ((SELECT id FROM tags WHERE name='untagged'), 'Image', 'tags')
       WHERE tag_id isnull
     SQL
   end
